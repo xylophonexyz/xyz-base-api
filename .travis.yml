@@ -1,0 +1,46 @@
+env:
+  global:
+  - CC_TEST_REPORTER_ID=7dd0be3f5f3bc2c79e3e65f5925b7c45fbf7269751d6f5259a87bc5d44f686e1
+language: ruby
+sudo: false
+services:
+- redis-server
+before_script:
+- bundle exec rake db:migrate RAILS_ENV=test
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+  > ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- "./cc-test-reporter before-build"
+script: CODECLIMATE_REPO_TOKEN=7dd0be3f5f3bc2c79e3e65f5925b7c45fbf7269751d6f5259a87bc5d44f686e1
+  bundle exec rake
+after_script: "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi"
+before_install:
+- openssl aes-256-cbc -K $encrypted_3c6f3701f30e_key -iv $encrypted_3c6f3701f30e_iv
+  -in .deploy-client-credentials.tar.gz.enc -out .deploy-client-credentials.tar.gz
+  -d
+- tar -xzf .deploy-client-credentials.tar.gz
+- if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export
+  CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+- source /home/travis/google-cloud-sdk/path.bash.inc
+- gcloud version
+- gcloud auth activate-service-account --key-file gae-client-secret.json --quiet
+- mkdir tmp
+- mkdir tmp/pids
+- mkdir log
+- touch tmp/pids/sidekiq.pid
+- touch log/sidekiq.log
+install:
+- gem install rubygems-update
+- update_rubygems
+- gem update --system
+- bundle install
+- gcloud config set project xyz-api --quiet
+- gcloud components update --quiet
+deploy:
+  skip_cleanup: true
+  on: master
+  provider: script
+  script: gcloud app deploy app.yaml worker.yaml --quiet
+addons:
+  code_climate:
+    repo_token: 7dd0be3f5f3bc2c79e3e65f5925b7c45fbf7269751d6f5259a87bc5d44f686e1

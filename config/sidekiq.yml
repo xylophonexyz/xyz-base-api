@@ -1,0 +1,10 @@
+:concurrency: 10
+:pidfile: sidekiq.pid
+:logfile: ./log/sidekiq.log
+:verbose: true
+:queues:
+  - default
+  - [critical, 4]
+  - [mailers, 2]
+production:
+  :concurrency: 25

@@ -1,0 +1,43 @@
+<div>
+  <table>
+    <tbody>
+    <tr>
+      <td>
+        <h3>Hello,</h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p>
+          Click below to confirm you would like to sign in to <%= @client_app %>.
+          This link will be valid for 15 minutes.
+        </p>
+        <p>
+          <%= link_to "Login to #{@client_app}", @redirect_uri, {
+              style: 'color:#ffffff;text-decoration:none;display:inline-block;min-height:38px;line-height:38px;padding-top:0;padding-right:16px;padding-bottom:0;padding-left:16px;border:0;outline:0;background-color:#53afff;font-size:14px;font-style:normal;font-weight:400;text-align:center;white-space:nowrap;border-radius:999em'
+          } %>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <small>Or copy/paste this link:</small>
+        <p>
+          <%= "#{@redirect_uri}" %>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <small>
+          Tips: After this link is used once it can't be used again. Also make sure that you are opening this link
+          on the device <b>and browser</b> you want to use <%= @client_app %> with. If you're still having trouble,
+          contact <%= link_to 'support', @support_address %>.
+        </small>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+

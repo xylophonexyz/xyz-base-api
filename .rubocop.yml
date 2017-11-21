@@ -1,0 +1,22 @@
+AllCops:
+  Exclude:
+    - "bin/*"
+    - "db/**/*.rb"
+    - "db/*.rb"
+    - "lib/**/*.rake"
+    - "spec/**/*.rb"
+    - "test/**/*.rb"
+    - "config/routes.rb"
+    - "config.ru"
+    - "Gemfile"
+    - "health_check.ru"
+    - "Rakefile"
+    - "app/jobs/*.rb"
+Metrics/LineLength:
+  Max: 120
+Metrics/MethodLength:
+  Max: 15
+Metrics/ModuleLength:
+  Max: 150
+Metrics/ClassLength:
+  Max: 125

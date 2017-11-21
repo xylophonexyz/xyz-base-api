@@ -1,0 +1,54 @@
+*.rbc
+capybara-*.html
+.rspec
+/log
+/tmp
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/public/system
+/coverage/
+/spec/tmp
+**.orig
+rerun.txt
+pickle-email-*.html
+
+## Environment normalisation:
+/.bundle
+/vendor/bundle
+
+# these should all be checked in to normalise the environment:
+# Gemfile.lock, .ruby-version, .ruby-gemset
+
+# unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
+.rvmrc
+
+# if using bower-rails ignore default bower_components path bower.json files
+/vendor/assets/bower_components
+*.bowerrc
+bower.json
+
+# Ignore pow environment settings
+.powenv
+.env
+
+# Ignore intellij settings
+.idea
+
+public/uploads
+
+# Ignore closure_tree gem locks
+/.lock-ClosureTreeComment-*
+
+sidekiq.log
+.vscode/
+
+.env.production
+.env.test
+gae-client-secret.json
+xyz-api.xylophonexyz.com.crt
+xyz-api.xylophonexyz.com.key
+xyz-db-1.ca.pem
+xyz-db-1.client.key.pem
+xyz-db-1.client.pem
+.deploy-client-credentials.tar.gz
+.lock-*

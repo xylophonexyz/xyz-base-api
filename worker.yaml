@@ -1,0 +1,8 @@
+runtime: ruby
+env: flex
+service: worker
+entrypoint: bundle exec foreman start --formation "$FORMATION"
+env_variables:
+  FORMATION: worker=1,health_check=1
+automatic_scaling:
+  min_num_instances: 1
