@@ -22,7 +22,8 @@ before_install:
 #- if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export
 #  CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
 - cd $HOME
-- curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-183.0.0-linux-x86_64.tar.gz
+- wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-183.0.0-linux-x86_64.tar.gz
+- tar xvzf google-cloud-sdk-183.0.0-linux-x86_64.tar.gz -C google-cloud-sdk
 - ./google-cloud-sdk/install.sh
 - source $HOME/google-cloud-sdk/path.bash.inc
 - gcloud version
