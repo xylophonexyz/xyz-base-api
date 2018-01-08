@@ -24,10 +24,10 @@ before_install:
 - echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 - sudo apt-get update && sudo apt-get install google-cloud-sdk
-- sudo apt-get update && sudo apt-get install google-cloud-sdk
 
 - gcloud version
 - gcloud auth activate-service-account --key-file gae-client-secret.json --quiet
+- gcloud config set project xyz-api --quiet
 - mkdir tmp
 - mkdir tmp/pids
 - mkdir log
@@ -38,8 +38,6 @@ install:
 - update_rubygems
 - gem update --system
 - bundle install
-- gcloud config set project xyz-api --quiet
-- gcloud components update --quiet
 deploy:
   skip_cleanup: true
   on: master
