@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160804051317) do
+ActiveRecord::Schema.define(version: 20180110025740) do
 
   create_table "comment_hierarchies", id: false, force: :cascade do |t|
     t.integer "ancestor_id", null: false
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20160804051317) do
     t.string "collectible_type"
     t.integer "index", default: 0
     t.string "type"
-    t.text "metadata", limit: 4294967295
+    t.text "metadata", limit: 4194303
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["collectible_id"], name: "index_component_collections_on_collectible_id"
@@ -48,11 +48,11 @@ ActiveRecord::Schema.define(version: 20160804051317) do
 
   create_table "components", force: :cascade do |t|
     t.integer "component_collection_id"
-    t.text "media"
+    t.text "media", limit: 4194303
     t.boolean "media_processing"
     t.string "type"
     t.integer "index", default: 0
-    t.text "metadata", limit: 4294967295
+    t.text "metadata", limit: 4194303
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["component_collection_id"], name: "index_components_on_component_collection_id"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20160804051317) do
     t.integer "parent_id"
     t.string "title"
     t.datetime "published_on"
-    t.text "metadata", limit: 4294967295
+    t.text "metadata", limit: 4194303
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["parent_id"], name: "index_compositions_on_parent_id"
@@ -125,7 +125,7 @@ ActiveRecord::Schema.define(version: 20160804051317) do
     t.boolean "published", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "metadata", limit: 4294967295
+    t.text "metadata", limit: 4194303
     t.index ["composition_id"], name: "index_pages_on_composition_id"
     t.index ["user_id"], name: "index_pages_on_user_id"
   end
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 20160804051317) do
     t.string "last_name", default: "", null: false
     t.text "avatar", limit: 4294967295
     t.boolean "avatar_processing"
-    t.text "metadata", limit: 4294967295
+    t.text "metadata", limit: 4194303
     t.string "type"
     t.boolean "onboarded", default: false
     t.datetime "created_at", null: false
