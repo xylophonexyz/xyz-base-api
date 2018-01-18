@@ -21,7 +21,7 @@ class ImageTranscodingJob < MediaTranscodingJob
 
   def optimize
     transloadit_client.step('image', '/image/optimize', {
-      progressive: true,
+      progressive: false,
       use: 'import',
       preserve_meta_data: true,
       fix_breaking_images: true,
