@@ -16,13 +16,22 @@ class ImageTranscodingJob < MediaTranscodingJob
 
   def transcoding_steps(path)
     # steps array are the "step" definitions defined below, e.g. { steps: [import(path), optimize, blur, thumb, store] }
-    { steps: [import(path), optimize, store] }
+    { steps: [import(path), png, optimize, store] }
   end
+
+  def png
+    transloadit_client.step('png', '/image/resize', {
+      format: 'png',
+      use: 'import',
+      result: true
+    })
+  end
+
 
   def optimize
     transloadit_client.step('image', '/image/optimize', {
       progressive: false,
-      use: 'import',
+      use: 'png',
       preserve_meta_data: true,
       fix_breaking_images: true,
       result: true
