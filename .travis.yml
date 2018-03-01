@@ -36,7 +36,7 @@ before_install:
 install:
 - gem install rubygems-update
 - update_rubygems
-- apt-get install imagemagick
+- sudo apt-get install imagemagick
 - gem update --system
 - bundle install
 deploy:
