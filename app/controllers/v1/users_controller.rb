@@ -68,7 +68,7 @@ module V1
     def update_avatar
       return unauthorized unless @user ||= current_user
       authorize @user
-      @user.avatar = StringIO.new(params[:image_data_url]).read
+      @user.avatar = params[:image_data_url] ? StringIO.new(params[:image_data_url]).read : nil
       complete_save_request(@user)
     end
 
