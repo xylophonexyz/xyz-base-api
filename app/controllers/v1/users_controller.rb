@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'mini_magick'
+
 module V1
   # UsersController
   class UsersController < ApplicationController
@@ -68,7 +70,7 @@ module V1
     def update_avatar
       return unauthorized unless @user ||= current_user
       authorize @user
-      @user.avatar = params[:image_data_url] ? StringIO.new(params[:image_data_url]).read : nil
+      @user.avatar = params[:image_data_url] ? compressed_avatar(params[:image_data_url]) : nil
       complete_save_request(@user)
     end
 
@@ -110,6 +112,15 @@ module V1
       metadata = metadata.permit! if metadata.respond_to? :permit!
       user.metadata ||= {}
       user.metadata = user.metadata.to_h.merge(metadata.to_h)
+    end
+
+    def compressed_avatar(data)
+      parts = data.split(',')
+      image_data = Base64.decode64 parts[1]
+      image = MiniMagick::Image.read(image_data)
+      image.resize '100x100'
+      image.format 'png'
+      "data:image/png;base64,#{Base64.strict_encode64(image.to_blob)}"
     end
   end
 end

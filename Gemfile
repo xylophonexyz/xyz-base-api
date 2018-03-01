@@ -15,6 +15,7 @@ gem 'sidekiq'
 gem 'puma'
 gem 'transloadit'
 gem 'rack'
+gem 'mini_magick'
 
 group :production do
   gem 'mysql2', '~> 0.3.13'
