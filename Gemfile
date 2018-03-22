@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'active_model_serializers', '~> 0.10.0'
+gem 'active_model_serializers'
 gem 'aws-sdk'
 gem 'closure_tree'
 gem 'dalli'
@@ -10,7 +10,7 @@ gem 'foreman'
 gem 'mailgun-ruby'
 gem 'pundit'
 gem 'rack-cors'
-gem 'rails', '~> 5.1.4'
+gem 'rails'
 gem 'sidekiq'
 gem 'puma'
 gem 'transloadit'
@@ -18,7 +18,7 @@ gem 'rack'
 gem 'mini_magick'
 
 group :production do
-  gem 'mysql2', '~> 0.3.13'
+  gem 'mysql2'
 end
 
 group :development, :test do
