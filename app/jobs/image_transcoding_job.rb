@@ -22,6 +22,7 @@ class ImageTranscodingJob < MediaTranscodingJob
   def png
     transloadit_client.step('png', '/image/resize', {
       format: 'png',
+      background: 'none',
       use: 'import',
       result: true
     })
