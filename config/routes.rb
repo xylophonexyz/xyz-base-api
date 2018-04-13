@@ -21,6 +21,10 @@ Rails.application.routes.draw do
     # search
     post '/search' => 'search#search'
 
+    # billing
+    post '/me/subscriptions' => 'subscriptions#create'
+    delete '/me/subscriptions' => 'subscriptions#destroy'
+
     # compositions
     get '/me/compositions' => 'compositions#index_by_current_user'
     resources :compositions do

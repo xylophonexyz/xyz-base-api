@@ -6,6 +6,7 @@ class UserSerializer < ApplicationSerializer
   attributes :followers, :following
   attributes :metadata, :type, :onboarded
   attributes :session, :avatar
+  attributes :billing_account
 
   def session
     { is_following: scope&.following?(object) }

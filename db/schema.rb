@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180110025740) do
+ActiveRecord::Schema.define(version: 20180413014112) do
+
+  create_table "billing_accounts", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "customer_id"
+    t.text "metadata", limit: 4194303
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "comment_hierarchies", id: false, force: :cascade do |t|
     t.integer "ancestor_id", null: false
@@ -48,7 +56,7 @@ ActiveRecord::Schema.define(version: 20180110025740) do
 
   create_table "components", force: :cascade do |t|
     t.integer "component_collection_id"
-    t.text "media", limit: 4194303
+    t.text "media", limit: 16777215
     t.boolean "media_processing"
     t.string "type"
     t.integer "index", default: 0

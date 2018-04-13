@@ -15,16 +15,15 @@ script: CODECLIMATE_REPO_TOKEN=7dd0be3f5f3bc2c79e3e65f5925b7c45fbf7269751d6f5259
   bundle exec rake
 after_script: "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi"
 before_install:
-- openssl aes-256-cbc -K $encrypted_7a483e2d280a_key -iv $encrypted_7a483e2d280a_iv
+- openssl aes-256-cbc -K $encrypted_95afecb62f5d_key -iv $encrypted_95afecb62f5d_iv
   -in .deploy-client-credentials.tar.gz.enc -out .deploy-client-credentials.tar.gz
   -d
 - tar -xzf .deploy-client-credentials.tar.gz
-
 - export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
-- echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+- echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee
+  -a /etc/apt/sources.list.d/google-cloud-sdk.list
 - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 - sudo apt-get update && sudo apt-get install google-cloud-sdk
-
 - gcloud version
 - gcloud auth activate-service-account --key-file gae-client-secret.json --quiet
 - gcloud config set project xyz-api --quiet

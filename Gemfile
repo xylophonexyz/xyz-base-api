@@ -16,6 +16,7 @@ gem 'puma'
 gem 'transloadit'
 gem 'rack'
 gem 'mini_magick'
+gem 'stripe'
 
 group :production do
   gem 'mysql2', '~> 0.3.13'

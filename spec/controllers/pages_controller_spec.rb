@@ -16,8 +16,6 @@ RSpec.describe V1::PagesController do
     allow(controller).to receive(:authenticate_user!).and_return(user)
     allow(controller).to receive(:doorkeeper_token).and_return(token)
     allow(controller).to receive(:current_user).and_return(@current_user)
-
-
   end
 
   describe 'GET index' do
