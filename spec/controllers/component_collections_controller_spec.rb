@@ -15,8 +15,6 @@ RSpec.describe V1::ComponentCollectionsController do
     allow(controller).to receive(:authenticate_user!).and_return(user)
     allow(controller).to receive(:doorkeeper_token).and_return(token)
     allow(controller).to receive(:current_user).and_return(@current_user)
-
-
   end
 
   describe 'POST create' do
@@ -43,7 +41,9 @@ RSpec.describe V1::ComponentCollectionsController do
       end
 
       it 'should not create a component collection by a user other than the pages owner' do
-        allow(controller).to receive(:current_user).and_return(new_user)
+        other_user = new_user
+        other_user.save!
+        allow(controller).to receive(:current_user).and_return(other_user)
         process :create, method: :post, params: { page_id: @page.id }
         parse_response
         expect(response.status).to eq(403)
@@ -519,6 +519,45 @@ RSpec.describe V1::ComponentCollectionsController do
       expect(@collection.reload.collectible).to eq(@page)
     end
 
+  end
+
+  describe 'Billing' do
+
+    it 'should only allow create requests for users for the first 30 days of creating their account' do
+      @current_user.created_at = 30.days.ago
+      @current_user.save
+      process :create, method: :post, params: { page_id: @page.id }
+
+      allow_any_instance_of(BillingHelper).to receive(:account_in_good_standing?).and_return(false)
+
+      json = JSON.parse(response.body)
+      expect(json['errors']).to_not be_nil
+      expect(response.status).to eq(403)
+    end
+
+    it 'should only allow update requests for users for the first 30 days of creating their account' do
+      @current_user.created_at = 30.days.ago
+      @current_user.save
+      allow_any_instance_of(BillingHelper).to receive(:account_in_good_standing?).and_return(false)
+
+      @collection = ComponentCollection.new
+      @collection.components << Component.new(media: 'foo')
+      @page.component_collections << @collection
+      @page.save!
+
+      process :update, method: :put, params: {
+        page_id: @page.id,
+        id: @collection.id,
+        index: 123,
+        metadata: {
+          foo: 'bar'
+        }
+      }
+
+      json = JSON.parse(response.body)
+      expect(json['errors']).to_not be_nil
+      expect(response.status).to eq(403)
+    end
   end
 
 end

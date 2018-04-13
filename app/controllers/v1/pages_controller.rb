@@ -6,9 +6,11 @@ module V1
     include ActionView::Helpers::SanitizeHelper
 
     before_action :fetch_tags, only: %i[create update]
+    before_action :validate_billing_account!, only: %i[create update]
     before_action :sanitize_params, only: %i[create update]
     skip_before_action :authenticate_user!, only: %i[index index_by_featured index_by_user show]
     after_action :increment_view_count, only: %i[show]
+    after_action :update_billing_account, only: %i[create update destroy]
 
     def create
       @page = Page.new page_params.merge(user: current_user)

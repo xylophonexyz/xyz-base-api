@@ -397,4 +397,33 @@ RSpec.describe V1::PagesController do
       expect(Page.all.length).to eq(1)
     end
   end
+
+  describe 'Billing' do
+
+    it 'should only allow create requests for users for the first 30 days of creating their account' do
+      @current_user.created_at = 30.days.ago
+      @current_user.save
+      allow_any_instance_of(BillingHelper).to receive(:account_in_good_standing?).and_return(false)
+
+      process :create, method: :post
+
+      json = JSON.parse(response.body)
+      expect(json['errors']).to_not be_nil
+      expect(response.status).to eq(403)
+    end
+
+    it 'should only allow update requests for users for the first 30 days of creating their account' do
+      @current_user.created_at = 30.days.ago
+      @current_user.save
+      allow_any_instance_of(BillingHelper).to receive(:account_in_good_standing?).and_return(false)
+
+      process :update, method: :put, params: {
+        id: @page.id, title: 'New Title'
+      }
+
+      json = JSON.parse(response.body)
+      expect(json['errors']).to_not be_nil
+      expect(response.status).to eq(403)
+    end
+  end
 end

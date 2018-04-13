@@ -8,9 +8,11 @@ module V1
     include TransloaditNotificationsHelper
 
     before_action :filename, only: [:upload]
+    before_action :validate_billing_account!, only: %i[create update]
     skip_before_action :authenticate_user!, only: [:notify]
     skip_before_action :doorkeeper_authorize!, only: [:notify]
     skip_before_action :set_current_user, only: [:notify]
+    after_action :update_billing_account, only: %i[create update destroy]
 
     def create
       return not_found unless fetch_collection

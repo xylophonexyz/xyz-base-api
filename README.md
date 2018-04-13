@@ -52,6 +52,37 @@ Then run from root project directory:
 rubocop
 ```
 
+# Environment Variables
+These are the required environment variables that must be set in order to run all aspects of the application
+
+```text
+export SECRET_KEY_BASE="xxx"
+export S3_BASE_URL="https://s3.amazonaws.com"
+export S3_BUCKET="some-bucket"
+export ASSET_HOST="https://cdn.xylophonexyz.com/"
+export AWS_ACCESS_KEY_ID="xxx"
+export AWS_SECRET_ACCESS_KEY="xxx+xxx"
+export AWS_REGION="us-west-1"
+export XYZ_DB_PASSWORD="xxx"
+export XYZ_DB_HOST="10.1.1.1"
+export SU_SCOPE="xxx"
+export TRANSLOADIT_KEY="xxx"
+export TRANSLOADIT_SECRET="xxx"
+export REDIS_HOST="127.0.0.1"
+export REDIS_URL="redis://127.0.0.1:6379"
+export REDIS_PASSWORD=""
+export MEMCACHED_URL="xxx"
+export MAILGUN_DOMAIN="sandbox0cd080f6b6ac44818c1e2ec372b0d5bb.mailgun.org"
+export MAILGUN_KEY="key-xxx"
+export XYZ_GATEWAY_URL="http://localhost:8080"
+export HOST_URL="http://localhost:3000"
+export STRIPE_KEY="xxx"
+export STRIPE_SECRET="xxx"
+export XYZ_BASE_PLAN_ID="xxx"
+export XYZ_PAGE_PLAN_ID="xxx"
+export XYZ_DATA_PLAN_ID="xxx"
+```
+
 # Encrypting Environment Variables for Travis Deployment
 Install travis command line tool:
 ```

@@ -3,6 +3,7 @@
 # Top level controller for API requests
 class ApplicationController < ActionController::API
   include Pundit
+  include BillingHelper
 
   before_action :doorkeeper_authorize!
   before_action :set_current_user
@@ -48,6 +49,14 @@ class ApplicationController < ActionController::API
     render json: record
   end
 
+  def validate_billing_account!
+    forbidden(['Inactive, past due, or invalid billing account']) unless valid_billing_account?
+  end
+
+  def update_billing_account
+    update_user_billing
+  end
+
   def authenticate_user!
     unauthorized unless set_current_user!
   end
@@ -60,14 +69,6 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def forbidden
-    render json: { errors: ['Forbidden'] }, status: :forbidden
-  end
-
-  def not_found
-    render json: { errors: ['Record not found'] }, status: :not_found
-  end
-
   def set_current_user
     Thread.current[:current_user] = User.where(id: doorkeeper_token.resource_owner_id).first
   end
@@ -76,11 +77,19 @@ class ApplicationController < ActionController::API
     Thread.current[:current_user] = User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
   end
 
-  def unauthorized
-    render json: { errors: ['Unauthorized'] }, status: :unauthorized
+  def forbidden(errors = ['Forbidden'])
+    render json: { errors: errors }, status: :forbidden
   end
 
-  def unknown_class
-    render json: { errors: ['Unknown class'] }, status: :bad_request
+  def not_found(errors = ['Record not found'])
+    render json: { errors: errors }, status: :not_found
+  end
+
+  def unauthorized(errors = ['Unauthorized'])
+    render json: { errors: errors }, status: :unauthorized
+  end
+
+  def unknown_class(errors = ['Unknown class'])
+    render json: { errors: errors }, status: :bad_request
   end
 end

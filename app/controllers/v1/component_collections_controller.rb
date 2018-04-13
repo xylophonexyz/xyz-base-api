@@ -5,6 +5,9 @@ module V1
   class ComponentCollectionsController < ApplicationController
     include ComponentsHelper
 
+    before_action :validate_billing_account!, only: %i[create update]
+    after_action :update_billing_account, only: %i[create update destroy]
+
     def create
       return not_found unless fetch_collectible
       @collection = ComponentCollection.new(component_collection_params)

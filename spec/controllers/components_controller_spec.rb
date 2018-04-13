@@ -667,7 +667,9 @@ RSpec.describe V1::ComponentsController do
       end
 
       it 'should add a new component only by the user who owns the page' do
-        allow(controller).to receive(:current_user).and_return(new_user)
+        other_user = new_user
+        other_user.save!
+        allow(controller).to receive(:current_user).and_return(other_user)
 
         @collection = ComponentCollection.new
         @component = Component.new(media: 'foo')
@@ -1002,6 +1004,62 @@ RSpec.describe V1::ComponentsController do
       expect(@component.reload.metadata['foo']).to eq('bar')
     end
 
+  end
+
+  describe 'Billing' do
+
+    it 'should only allow create requests for users for the first 30 days of creating their account' do
+      @current_user.created_at = 30.days.ago
+      @current_user.save
+      allow_any_instance_of(BillingHelper).to receive(:account_in_good_standing?).and_return(false)
+
+      @collection = ComponentCollection.new
+      @component = Component.new(media: 'foo')
+      @collection.components << @component
+      @page.component_collections << @collection
+      @page.save!
+
+      process :create, method: :post, params: {
+        page_id: @page.id,
+        collection_id: @collection.id,
+        media: 'bar',
+        type: 'Component',
+        metadata: {
+          foo: 'bar',
+          baz: 'qux'
+        }
+      }
+
+      json = JSON.parse(response.body)
+      expect(json['errors']).to_not be_nil
+      expect(response.status).to eq(403)
+    end
+
+    it 'should only allow update requests for users for the first 30 days of creating their account' do
+      @current_user.created_at = 30.days.ago
+      @current_user.save
+      allow_any_instance_of(BillingHelper).to receive(:account_in_good_standing?).and_return(false)
+
+      @collection = ComponentCollection.new
+      @component = new_audio_component
+      @collection.components << @component
+      @page.component_collections << @collection
+      @page.save!
+
+      process :update, method: :put, params: {
+        page_id: @page.id,
+        collection_id: @collection.id,
+        id: @component.id,
+        index: 123,
+        metadata: {
+          foo: 'bar'
+        }
+      }
+
+      json = JSON.parse(response.body)
+      expect(json['errors']).to_not be_nil
+      expect(response.status).to eq(403)
+    end
   end
 
 end
