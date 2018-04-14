@@ -21,13 +21,7 @@ RSpec.describe V1::SubscriptionsController, type: :controller do
 
     it 'should create a billing account and subscription in stripe' do
       process :create, method: :post, params: {
-        stripeToken: 'tok_visa',
-        stripeEmail: 'foo@example.com',
-        stripeBillingName: 'Foo Bar',
-        stripeBillingAddressLine1: '123 Any Street',
-        stripeBillingAddressZip: '123456',
-        stripeBillingAddressCity: 'San Francisco',
-        stripeBillingAddressCountry: 'United States'
+        token: 'tok_visa',
       }
 
       expect(response.status).to eq(201)
@@ -39,13 +33,7 @@ RSpec.describe V1::SubscriptionsController, type: :controller do
 
     it 'should provide error messages when creating a subscription fails' do
       process :create, method: :post, params: {
-        stripeToken: 'invalid token',
-        stripeEmail: 'foo@example.com',
-        stripeBillingName: 'Foo Bar',
-        stripeBillingAddressLine1: '123 Any Street',
-        stripeBillingAddressZip: '123456',
-        stripeBillingAddressCity: 'San Francisco',
-        stripeBillingAddressCountry: 'United States'
+        token: 'invalid token',
       }
 
       json = JSON.parse(response.body)
@@ -60,13 +48,7 @@ RSpec.describe V1::SubscriptionsController, type: :controller do
 
     it 'should destroy an existing billing account' do
       process :create, method: :post, params: {
-        stripeToken: 'tok_visa',
-        stripeEmail: 'foo@example.com',
-        stripeBillingName: 'Foo Bar',
-        stripeBillingAddressLine1: '123 Any Street',
-        stripeBillingAddressZip: '123456',
-        stripeBillingAddressCity: 'San Francisco',
-        stripeBillingAddressCountry: 'United States'
+        token: 'tok_visa',
       }
 
       json = JSON.parse(response.body)
@@ -82,13 +64,7 @@ RSpec.describe V1::SubscriptionsController, type: :controller do
 
     it 'should return errors if attempting an action that produces an error in stripe' do
       process :create, method: :post, params: {
-        stripeToken: 'tok_visa',
-        stripeEmail: 'foo@example.com',
-        stripeBillingName: 'Foo Bar',
-        stripeBillingAddressLine1: '123 Any Street',
-        stripeBillingAddressZip: '123456',
-        stripeBillingAddressCity: 'San Francisco',
-        stripeBillingAddressCountry: 'United States'
+        token: 'tok_visa',
       }
       expect(response.status).to eq(201)
       @current_user.reload.billing_account.customer_id = 'foo'

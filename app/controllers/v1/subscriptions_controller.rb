@@ -38,20 +38,13 @@ module V1
     def create_customer
       @customer = Stripe::Customer.create(
         description: "billing account for user #{current_user.email}",
-        source: subscription_params[:stripeToken]
+        source: subscription_params[:token]
       )
     end
 
     def create_billing_account
       @account = BillingAccount.new(user: current_user)
       @account.metadata = {
-        billing_name: subscription_params[:stripeBillingName],
-        billing_address_line_1: subscription_params[:stripeBillingAddressLine1],
-        billing_address_line_2: subscription_params[:stripeBillingAddressLine2],
-        billing_address_zip: subscription_params[:stripeBillingAddressZip],
-        billing_address_state: subscription_params[:stripeBillingAddressState],
-        billing_address_city: subscription_params[:stripeBillingAddressCity],
-        billing_address_country: subscription_params[:stripeBillingAddressCountry],
         subscription: @subscription.as_json
       }
       @account.customer_id = @customer.id
@@ -75,16 +68,7 @@ module V1
     end
 
     def subscription_params
-      params.permit([
-                      :stripeToken,
-                      :stripeBillingName,
-                      :stripeBillingAddressLine1,
-                      :stripeBillingAddressLine2,
-                      :stripeBillingAddressZip,
-                      :stripeBillingAddressState,
-                      :stripeBillingAddressCity,
-                      :stripeBillingAddressCountry,
-                    ])
+      params.permit(:token)
     end
 
   end

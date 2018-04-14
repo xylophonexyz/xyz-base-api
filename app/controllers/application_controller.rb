@@ -50,7 +50,7 @@ class ApplicationController < ActionController::API
   end
 
   def validate_billing_account!
-    forbidden(['Inactive, past due, or invalid billing account']) unless valid_billing_account?
+    forbidden(['Inactive, past due, or invalid billing account'], 'billing') unless valid_billing_account?
   end
 
   def update_billing_account
@@ -77,19 +77,19 @@ class ApplicationController < ActionController::API
     Thread.current[:current_user] = User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
   end
 
-  def forbidden(errors = ['Forbidden'])
-    render json: { errors: errors }, status: :forbidden
+  def forbidden(errors = ['Forbidden'], type = 'forbidden')
+    render json: { errors: errors, type: type }, status: :forbidden
   end
 
-  def not_found(errors = ['Record not found'])
-    render json: { errors: errors }, status: :not_found
+  def not_found(errors = ['Record not found'], type = 'not_found')
+    render json: { errors: errors, type: type }, status: :not_found
   end
 
-  def unauthorized(errors = ['Unauthorized'])
-    render json: { errors: errors }, status: :unauthorized
+  def unauthorized(errors = ['Unauthorized'], type = 'unauthorized')
+    render json: { errors: errors, type: type }, status: :unauthorized
   end
 
-  def unknown_class(errors = ['Unknown class'])
-    render json: { errors: errors }, status: :bad_request
+  def unknown_class(errors = ['Unknown class'], type = 'unknown')
+    render json: { errors: errors, type: type }, status: :bad_request
   end
 end
