@@ -38,7 +38,8 @@ module V1
     def create_customer
       @customer = Stripe::Customer.create(
         description: "billing account for user #{current_user.email}",
-        source: subscription_params[:token]
+        source: subscription_params[:token],
+        email: current_user.email
       )
     end
 
