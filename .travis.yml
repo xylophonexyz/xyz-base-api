@@ -39,11 +39,6 @@ install:
 - sudo apt-get install imagemagick
 - gem update --system
 - bundle install
-deploy:
-  skip_cleanup: true
-  on: master
-  provider: script
-  script: gcloud app deploy app.yaml worker.yaml --quiet
 addons:
   code_climate:
     repo_token: 7dd0be3f5f3bc2c79e3e65f5925b7c45fbf7269751d6f5259a87bc5d44f686e1
