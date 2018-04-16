@@ -3,7 +3,7 @@
 # Helper for bundling files associated with Component objects.
 module ComponentFilesBundleHelper
   include ComponentsHelper
-  
+
   private
 
   def published_child_components(composition)
