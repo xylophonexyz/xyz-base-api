@@ -6,7 +6,7 @@ module V1
     include ComponentsHelper
 
     before_action :validate_billing_account!, only: %i[create update]
-    after_action :update_billing_account, only: %i[create update destroy]
+    after_action :update_billing_account, only: %i[create destroy]
 
     def create
       return not_found unless fetch_collectible

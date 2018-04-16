@@ -6,16 +6,33 @@ class BillingQuantifierJob < ApplicationJob
   def perform(user_id)
     user = User.find(user_id)
     if user&.billing_account
-      customer = Stripe::Customer.retrieve(user.billing_account.customer_id)
-      # there should only be one subscription
-      subscription = customer.subscriptions.data.first
-      subscription_items = subscription.items.data
-      # page plan and data plan have metered usage, we want to update the quantity to reflect usage
-      page_plan = subscription_items.select { |item| item.plan.id == ENV.fetch('XYZ_PAGE_PLAN_ID') }.first
-      data_plan = subscription_items.select { |item| item.plan.id == ENV.fetch('XYZ_DATA_PLAN_ID') }.first
+      page_plan = get_page_plan(user)
+      data_plan = get_data_plan(user)
       update_page_usage(user, page_plan) if page_plan
       update_data_usage(user, data_plan) if data_plan
     end
+  end
+
+  def get_customer(customer_id)
+    Stripe::Customer.retrieve(customer_id)
+  end
+
+  def get_subscription_items(user)
+    customer = get_customer(user.billing_account.customer_id)
+    # there should only be one subscription
+    subscription = customer.subscriptions.data.first
+    subscription.items.data
+  end
+
+  def get_data_plan(user)
+    subscription_items = get_subscription_items(user)
+    subscription_items.select { |item| item.plan.id == ENV.fetch('XYZ_DATA_PLAN_ID') }.first
+  end
+
+  def get_page_plan(user)
+    subscription_items = get_subscription_items(user)
+    # page plan and data plan have metered usage, we want to update the quantity to reflect usage
+    subscription_items.select { |item| item.plan.id == ENV.fetch('XYZ_PAGE_PLAN_ID') }.first
   end
 
   def update_page_usage(user, plan)
@@ -34,7 +51,7 @@ class BillingQuantifierJob < ApplicationJob
     components = Component.where(component_collection: collections_relation)
     components.each do |component|
       if component_has_uploaded_media? component
-        quantity += component.media['transcoding']['bytes_usage'] / 1024 ** 3
+        quantity += get_component_data_usage(component)
       end
     end
     Stripe::UsageRecord.create(
@@ -45,10 +62,21 @@ class BillingQuantifierJob < ApplicationJob
     )
   end
 
+  def get_component_data_usage(component)
+    component.media['transcoding']['bytes_usage'] / 1024 ** 3
+  end
+
   def component_has_uploaded_media?(component)
     component.media && !component.media_processing &&
       (component.is_a?(ImageComponent) || component.is_a?(AudioComponent) ||
         component.is_a?(MediaComponent) || component.is_a?(VideoComponent)) &&
       component.media['transcoding']
+  end
+
+  def get_user_from_component(component)
+    parent = component&.component_collection&.collectible
+    return parent if parent.is_a?(User)
+    return parent.user if parent
+    nil
   end
 end

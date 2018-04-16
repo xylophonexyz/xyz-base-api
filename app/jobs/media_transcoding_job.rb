@@ -31,6 +31,8 @@ class MediaTranscodingJob < ApplicationJob
     if response.finished?
       component.media_processing = false
       component.media[:error] = response.body['message'] if response.error?
+      # ensure billing account reflects new usage
+      BillingDataQuantifierJob.perform_later(component)
     else
       # schedule a new job to update the status of the transcoding. In prod, this will be done through the notify_url
       self.class.set(wait: 2.seconds).perform_later(component.id) if Rails.env == 'development'

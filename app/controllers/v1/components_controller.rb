@@ -12,7 +12,7 @@ module V1
     skip_before_action :authenticate_user!, only: [:notify]
     skip_before_action :doorkeeper_authorize!, only: [:notify]
     skip_before_action :set_current_user, only: [:notify]
-    after_action :update_billing_account, only: %i[create update destroy]
+    after_action :update_billing_account, only: %i[create destroy]
 
     def create
       return not_found unless fetch_collection

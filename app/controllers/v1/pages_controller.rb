@@ -10,7 +10,7 @@ module V1
     before_action :sanitize_params, only: %i[create update]
     skip_before_action :authenticate_user!, only: %i[index index_by_featured index_by_user show]
     after_action :increment_view_count, only: %i[show]
-    after_action :update_billing_account, only: %i[create update destroy]
+    after_action :update_billing_account, only: %i[create destroy]
 
     def create
       @page = Page.new page_params.merge(user: current_user)
