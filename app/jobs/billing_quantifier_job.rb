@@ -13,13 +13,13 @@ class BillingQuantifierJob < ApplicationJob
       # page plan and data plan have metered usage, we want to update the quantity to reflect usage
       page_plan = subscription_items.select { |item| item.plan.id == ENV.fetch('XYZ_PAGE_PLAN_ID') }.first
       data_plan = subscription_items.select { |item| item.plan.id == ENV.fetch('XYZ_DATA_PLAN_ID') }.first
-      update_page_usage(page_plan) if page_plan
-      update_data_usage(data_plan) if data_plan
+      update_page_usage(user, page_plan) if page_plan
+      update_data_usage(user, data_plan) if data_plan
     end
   end
 
-  def update_page_usage(plan)
-    quantity = current_user.pages.where(published: true).count
+  def update_page_usage(user, plan)
+    quantity = user.pages.where(published: true).count
     Stripe::UsageRecord.create(
       quantity: quantity,
       timestamp: Time.now.to_i,
@@ -28,9 +28,9 @@ class BillingQuantifierJob < ApplicationJob
     )
   end
 
-  def update_data_usage(plan)
+  def update_data_usage(user, plan)
     quantity = 0
-    collections_relation = ComponentCollection.where(collectible: current_user.pages)
+    collections_relation = ComponentCollection.where(collectible: user.pages)
     components = Component.where(component_collection: collections_relation)
     components.each do |component|
       if component_has_uploaded_media? component
