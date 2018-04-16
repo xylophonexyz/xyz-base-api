@@ -2,6 +2,7 @@
 
 # Helper for bundling files associated with Component objects.
 module ComponentFilesBundleHelper
+  include ComponentsHelper
   private
 
   def published_child_components(composition)
@@ -42,7 +43,6 @@ module ComponentFilesBundleHelper
   end
 
   def can_get_files_from_component?(component)
-    component.is_a?(ImageComponent) || component.is_a?(AudioComponent) ||
-      component.is_a?(MediaComponent) || component.is_a?(VideoComponent)
+    media_component?(component)
   end
 end

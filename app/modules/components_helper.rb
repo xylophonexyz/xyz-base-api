@@ -77,4 +77,17 @@ module ComponentsHelper
     # remove files from params. files are uploaded to media components in a separate step
     media unless media.respond_to? :read
   end
+
+  def get_component_transcoding_data(component)
+    JSON.parse(component.media[:transcoding]) if media_component?(component)
+  end
+
+  def media_component?(component)
+    component.is_a?(ImageComponent) || component.is_a?(AudioComponent) ||
+      component.is_a?(MediaComponent) || component.is_a?(VideoComponent)
+  end
+
+  def component_has_uploaded_media?(component)
+    component.media && !component.media_processing && media_component?(component) && component.media[:transcoding]
+  end
 end

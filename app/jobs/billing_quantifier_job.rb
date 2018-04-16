@@ -1,6 +1,8 @@
 class BillingQuantifierJob < ApplicationJob
   require 'stripe'
 
+  include ComponentsHelper
+
   queue_as :default
 
   def perform(user_id)
@@ -63,14 +65,8 @@ class BillingQuantifierJob < ApplicationJob
   end
 
   def get_component_data_usage(component)
-    component.media['transcoding']['bytes_usage'] / 1024 ** 3
-  end
-
-  def component_has_uploaded_media?(component)
-    component.media && !component.media_processing &&
-      (component.is_a?(ImageComponent) || component.is_a?(AudioComponent) ||
-        component.is_a?(MediaComponent) || component.is_a?(VideoComponent)) &&
-      component.media['transcoding']
+    data = get_component_transcoding_data(component)
+    data['bytes_usage'] / 1024 ** 3
   end
 
   def get_user_from_component(component)
