@@ -5,13 +5,10 @@ module PageHelper
   def guess_title(object)
     title = (object.title || object.description || '').strip
     if title == ''
-      object.components.each do |collection|
-        media = collection.components.first.media unless collection.components.empty?
-        title = media if media.is_a?(String)
-      end
-      sorted_text_blacklist.each { |artifact| title = title.gsub(artifact, '') }
+      page_index = object.user.pages.sort_by(&:created_at).index { |p| p.id == object.id }
+      title = "Page #{page_index + 1}"
     end
-    ActionController::Base.helpers.truncate(ActionController::Base.helpers.strip_tags(title), length: 140).strip
+    title
   end
 
   def cover(object)
@@ -37,7 +34,7 @@ module PageHelper
 
   def media_component?(component)
     component.is_a?(ImageComponent) || component.is_a?(VideoComponent) ||
-      component.is_a?(AudioComponent) || component.is_a?(MediaComponent)
+        component.is_a?(AudioComponent) || component.is_a?(MediaComponent)
   end
 
   def media_url(component)
