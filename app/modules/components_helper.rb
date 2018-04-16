@@ -77,7 +77,7 @@ module ComponentsHelper
   end
 
   def get_component_transcoding_data(component)
-    JSON.parse(component.media[:transcoding]) if media_component?(component)
+    JSON.parse(component.media[:transcoding])
   end
 
   def media_component?(component)

@@ -6,7 +6,7 @@ class BillingDataQuantifierJob < BillingQuantifierJob
     if user && component && component_has_uploaded_media?(component)
       usage = component_data_usage(component)
       plan = customer_data_plan(user)
-      timestamp = customer_subscription(user).current_period_end
+      timestamp = usage_period_timestamp(user)
       Stripe::UsageRecord.create(
         quantity: usage,
         timestamp: timestamp,

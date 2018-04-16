@@ -43,7 +43,7 @@ class BillingQuantifierJob < ApplicationJob
 
   def update_page_usage(user, plan)
     quantity = user.pages.where(published: true).count
-    timestamp = customer_subscription(user).current_period_end
+    timestamp = usage_period_timestamp(user)
     Stripe::UsageRecord.create(
       quantity: quantity,
       timestamp: timestamp,
@@ -52,9 +52,13 @@ class BillingQuantifierJob < ApplicationJob
     )
   end
 
+  def usage_period_timestamp(user)
+    customer_subscription(user).billing_cycle_anchor
+  end
+
   def update_data_usage(user, plan)
     quantity = 0
-    timestamp = customer_subscription(user).current_period_end
+    timestamp = usage_period_timestamp(user)
     collections_relation = ComponentCollection.where(collectible: user.pages)
     components = Component.where(component_collection: collections_relation)
     components.each do |component|
