@@ -2,8 +2,6 @@
 
 # Helper for Components based logic
 module ComponentsHelper
-  include ComponentFilesBundleHelper
-
   private
 
   def fetch_collection
