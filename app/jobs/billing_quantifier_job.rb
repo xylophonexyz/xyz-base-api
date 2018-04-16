@@ -76,7 +76,7 @@ class BillingQuantifierJob < ApplicationJob
 
   def component_data_usage(component)
     data = get_component_transcoding_data(component)
-    data['bytes_usage'] / 1024 ** 3
+    data['bytes_usage'] / 1024 ** 3.0
   end
 
   def get_user_from_component(component)
