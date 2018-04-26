@@ -103,8 +103,10 @@ module V1
     end
 
     def increment_view_count
-      @page.views << View.new(user: current_user, viewable: @page)
-      @page.save
+      if @page
+        @page.views << View.new(user: current_user, viewable: @page)
+        @page.save
+      end
     end
 
     def published_by_current_user
